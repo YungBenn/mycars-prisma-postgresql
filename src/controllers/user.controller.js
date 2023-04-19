@@ -30,6 +30,31 @@ export async function getAllUsers(req, res) {
   }
 }
 
+export async function getUser(req, res) {
+  const { id } = req.params;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: String(id) },
+      include: {
+        cars: true,
+      },
+    });
+    if (!user) {
+      logger.error('False ID');
+      res.status(404).json({
+        message: 'You put a wrong ID',
+      });
+    } else {
+      logger.info('Success to get a user');
+      res.status(200).json({
+        status: 200,
+        data: user,
+      });
+    }
+  } catch (error) {}
+}
+
 export async function registerUser(req, res) {
   const { error, value } = registerValidation(req.body);
 

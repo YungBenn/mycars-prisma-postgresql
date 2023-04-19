@@ -5,6 +5,7 @@ import config from './config/env.js';
 import logger from './utils/logger.js';
 import userRouter from './routes/user.route.js';
 import carRouter from './routes/car.route.js';
+import deserializedToken from './middlewares/deserializedToken.js';
 
 const app = express();
 const port = config.port;
@@ -12,6 +13,8 @@ const port = config.port;
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
+
+app.use(deserializedToken);
 
 app.use('/user', userRouter);
 app.use('/car', carRouter);

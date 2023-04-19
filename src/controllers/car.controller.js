@@ -1,9 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import logger from '../utils/logger.js';
-import {
-  addCarValidation,
-  updateCarValidation,
-} from '../validation/car.validation.js';
+import { addCarValidation } from '../validation/car.validation.js';
 
 const prisma = new PrismaClient();
 
@@ -86,41 +83,34 @@ export async function getCar(req, res) {
 
 export async function updateCar(req, res) {
   const { id } = req.params;
-  const { error, value } = updateCarValidation();
+  const { name, brand, color, for_sale, carOwner } = req.body;
 
   try {
-    if (error) {
+    const findCar = await prisma.car.findUnique({
+      where: { id: String(id) },
+    });
+    if (!findCar) {
       logger.error(error);
-      res.status(422).json({
-        message: 'Failed to update a car',
+      res.status(404).json({
+        message: 'You put a wrong ID',
       });
     } else {
-      const findCar = await prisma.car.findUnique({
+      const car = await prisma.car.update({
         where: { id: String(id) },
+        data: {
+          name,
+          brand,
+          color,
+          for_sale,
+          Owner: { connect: { email: carOwner } },
+        },
       });
-      if (!findCar) {
-        logger.error(error);
-        res.status(404).json({
-          message: 'You put a wrong ID',
-        });
-      } else {
-        const car = await prisma.car.update({
-          where: { id: String(id) },
-          data: {
-            name: value.name,
-            brand: value.brand,
-            color: value.color,
-            for_sale: value.for_sale,
-            Owner: { connect: { email: value.carOwner } },
-          },
-        });
-        logger.info('Car has been updated');
-        res.status(200).json({
-          status: 200,
-          message: 'Success update a car',
-          data: car,
-        });
-      }
+      logger.info('Car has been updated');
+      res.status(200).json({
+        status: 200,
+        message: 'Success update a car',
+        data: car,
+      });
     }
   } catch (error) {
     logger.error(error);
