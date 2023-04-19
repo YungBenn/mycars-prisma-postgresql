@@ -3,7 +3,7 @@ import {
   loginValidation,
   refreshTokenValidation,
   registerValidation,
-} from '../middlewares/user.validation.js';
+} from '../validation/user.validation.js';
 import logger from '../utils/logger.js';
 import { checkPassword, hashing } from '../utils/bcrypt.js';
 import { signJWT, verifyJWT } from '../utils/jwt.js';

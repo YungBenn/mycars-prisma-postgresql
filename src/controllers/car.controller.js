@@ -3,7 +3,7 @@ import logger from '../utils/logger.js';
 import {
   addCarValidation,
   updateCarValidation,
-} from '../middlewares/car.validation.js';
+} from '../validation/car.validation.js';
 
 const prisma = new PrismaClient();
 
