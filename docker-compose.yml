@@ -1,0 +1,30 @@
+version: "3.1"
+services:
+
+  # postgresql service
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - ${DB_PORT}:5432
+    volumes:
+      - mongo:/data/db
+
+  # api service
+  my-carsapi-typescript:
+    container_name: my-carsapi-typescript
+    image: rubenadi/my-carsapi-typescript
+    restart: always
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+
+volumes:
+  mongo: {}
