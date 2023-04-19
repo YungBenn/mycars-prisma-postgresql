@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import logger from '../utils/logger.js';
-import { addCarValidation } from '../validation/car.validation.js';
+import { addCarValidation } from '../validations/car.validation.js';
 
 const prisma = new PrismaClient();
 
